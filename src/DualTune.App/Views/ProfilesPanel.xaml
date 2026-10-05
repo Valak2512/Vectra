@@ -1,0 +1,18 @@
+<UserControl x:Class="DualTune.App.Views.ProfilesPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:DualTune.App.Localization">
+    <StackPanel DataContext="{Binding Profiles}">
+        <TextBlock Style="{StaticResource Label}" Text="{l:Tr profiles.title}" Margin="0,0,0,6" />
+        <ComboBox ItemsSource="{Binding Names}" SelectedItem="{Binding Selected}" />
+        <UniformGrid Rows="1" Margin="-6,6,-6,0">
+            <Button Style="{StaticResource IconButton}" Width="Auto" Content="&#xE710;" Command="{Binding NewCommand}" ToolTip="{l:Tr profiles.new}" />
+            <Button Style="{StaticResource IconButton}" Width="Auto" Content="&#xE8C8;" Command="{Binding DuplicateCommand}" ToolTip="{l:Tr profiles.duplicate}" />
+            <Button Style="{StaticResource IconButton}" Width="Auto" Content="&#xE70F;" Command="{Binding RenameCommand}" ToolTip="{l:Tr profiles.rename}" />
+            <Button Style="{StaticResource IconButton}" Width="Auto" Content="&#xE74D;" Command="{Binding DeleteCommand}" ToolTip="{l:Tr profiles.delete}" />
+            <Button Style="{StaticResource IconButton}" Width="Auto" Content="&#xE74E;" Command="{Binding ExportCommand}" ToolTip="{l:Tr profiles.export}" />
+            <Button Style="{StaticResource IconButton}" Width="Auto" Content="&#xE8E5;" Command="{Binding ImportCommand}" ToolTip="{l:Tr profiles.import}" />
+        </UniformGrid>
+        <TextBlock Text="{Binding Error}" Foreground="{StaticResource Red}" TextWrapping="Wrap" FontSize="12" />
+    </StackPanel>
+</UserControl>

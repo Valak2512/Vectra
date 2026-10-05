@@ -1,0 +1,29 @@
+VECTRA - réglage de manette DualSense / DualSense Edge
+======================================================
+
+1. Dézippe ce dossier où tu veux (par exemple sur le Bureau).
+2. Lance Vectra.exe.
+3. Si Windows affiche « Windows a protégé votre ordinateur » : clique sur
+   « Informations complémentaires », puis « Exécuter quand même »
+   (le logiciel n'est pas signé, c'est normal).
+4. Suis le guide qui s'ouvre : il installe ce qu'il faut et vérifie tout.
+   La langue (français / anglais) se change sur sa première page
+   ou dans PARAMÈTRES.
+
+Laisse Vectra ouvert pendant que tu joues.
+Tes réglages sont enregistrés dans %APPDATA%\DualTune.
+
+
+VECTRA - DualSense / DualSense Edge controller tuning (English)
+===============================================================
+
+1. Unzip this folder anywhere (for example on the Desktop).
+2. Run Vectra.exe.
+3. If Windows shows "Windows protected your PC": click "More info",
+   then "Run anyway" (the software is not signed, this is expected).
+4. Follow the guide that opens: it installs what is needed and checks
+   everything. Vectra follows your Windows language; you can switch
+   between English and French on the guide's first page or in SETTINGS.
+
+Keep Vectra open while you play.
+Your settings are saved in %APPDATA%\DualTune.

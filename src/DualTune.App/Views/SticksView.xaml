@@ -1,0 +1,148 @@
+<UserControl x:Class="DualTune.App.Views.SticksView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:DualTune.App.Localization"
+             xmlns:c="clr-namespace:DualTune.App.Controls"
+             xmlns:theme="clr-namespace:DualTune.App.Theme">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVis" />
+    </UserControl.Resources>
+
+    <DockPanel DataContext="{Binding Sticks}">
+        <!-- Sélecteur de stick, aligné à droite au niveau du titre de page. -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,-44,0,14">
+            <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr sticks.left}" GroupName="side" IsChecked="{Binding IsLeft}" />
+            <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr sticks.right}" GroupName="side" IsChecked="{Binding IsRight}" />
+        </StackPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,10,0">
+            <StackPanel DataContext="{Binding Current}">
+
+                <Expander Style="{StaticResource Section}" Header="{l:Tr sticks.deadzone}" theme:Racing.Summary="{Binding DeadzoneSummary}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="24" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <c:StickVisualizer Width="220" Height="220" Settings="{Binding Settings}" Raw="{Binding Raw}" Processed="{Binding Processed}" />
+                            <UniformGrid Columns="2" Margin="0,4,0,0">
+                                <Border Style="{StaticResource Readout}" Margin="0,0,2,0">
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.input}" />
+                                        <TextBlock Text="{Binding InputReadout}" FontFamily="{StaticResource Display}" FontStyle="Oblique" FontWeight="SemiBold" FontSize="17" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource Readout}" BorderBrush="{StaticResource Red}" BorderThickness="0,0,0,2">
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.output}" />
+                                        <TextBlock Text="{Binding OutputReadout}" FontFamily="{StaticResource Display}" FontStyle="Oblique" FontWeight="SemiBold" FontSize="17" />
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.innerShape}" Margin="0,0,0,6" />
+                            <WrapPanel>
+                                <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr shape.round}" GroupName="inner" IsChecked="{Binding IsInnerRound}" />
+                                <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr shape.square}" GroupName="inner" IsChecked="{Binding IsInnerSquare}" />
+                                <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr shape.cross}" GroupName="inner" IsChecked="{Binding IsInnerCross}" />
+                                <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr shape.hybrid}" GroupName="inner" IsChecked="{Binding IsInnerHybrid}" />
+                            </WrapPanel>
+
+                            <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.outerShape}" Margin="0,14,0,6" />
+                            <WrapPanel>
+                                <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr shape.circle}" GroupName="outer" IsChecked="{Binding IsOuterCircle}" />
+                                <RadioButton Style="{StaticResource SkewToggle}" Content="{l:Tr shape.squareOuter}" GroupName="outer" IsChecked="{Binding IsOuterSquare}" />
+                            </WrapPanel>
+
+                            <Grid Margin="0,18,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="54" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="28" /><RowDefinition Height="Auto" /><RowDefinition Height="28" /><RowDefinition Height="28" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.inner}" />
+                                <c:SegmentSlider Grid.Column="1" Minimum="0" Maximum="0.5" SmallChange="0.005" Value="{Binding InnerDeadzone}" />
+                                <TextBlock Grid.Column="2" Style="{StaticResource Value}" Text="{Binding InnerDeadzone, StringFormat={}{0:P1}}" />
+
+                                <Grid Grid.Row="1" Grid.ColumnSpan="3" Height="28" Visibility="{Binding ShowAxial, Converter={StaticResource BoolVis}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110" /><ColumnDefinition Width="*" /><ColumnDefinition Width="54" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.axial}" />
+                                    <c:SegmentSlider Grid.Column="1" Minimum="0" Maximum="0.5" SmallChange="0.005" Value="{Binding AxialDeadzone}" />
+                                    <TextBlock Grid.Column="2" Style="{StaticResource Value}" Text="{Binding AxialDeadzone, StringFormat={}{0:P1}}" />
+                                </Grid>
+
+                                <TextBlock Grid.Row="2" Style="{StaticResource Label}" Text="{l:Tr sticks.outer}" />
+                                <c:SegmentSlider Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="0.3" SmallChange="0.005" Value="{Binding OuterDeadzone}" />
+                                <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding OuterDeadzone, StringFormat={}{0:P1}}" />
+
+                                <TextBlock Grid.Row="3" Style="{StaticResource Label}" Text="{l:Tr common.antiDeadzone}" />
+                                <c:SegmentSlider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="0.5" SmallChange="0.005" Value="{Binding AntiDeadzone}" />
+                                <TextBlock Grid.Row="3" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding AntiDeadzone, StringFormat={}{0:P1}}" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Expander>
+
+                <Expander Style="{StaticResource Section}" Header="{l:Tr sticks.response}" theme:Racing.Summary="{Binding ResponseSummary}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="*" MinWidth="200" />
+                            <ColumnDefinition Width="54" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28" /><RowDefinition Height="28" /><RowDefinition Height="36" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.sensitivity}" />
+                        <c:SegmentSlider Grid.Column="1" Minimum="0.5" Maximum="2" SmallChange="0.01" Accent="{StaticResource Red}" Value="{Binding Sensitivity}" />
+                        <TextBlock Grid.Column="2" Style="{StaticResource Value}" Text="{Binding Sensitivity, StringFormat={}{0:P0}}" />
+
+                        <TextBlock Grid.Row="1" Style="{StaticResource Label}" Text="{l:Tr sticks.snap}" ToolTip="{l:Tr sticks.snapTip}" />
+                        <c:SegmentSlider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="30" SmallChange="0.5" Accent="{StaticResource Red}" Value="{Binding AxisSnapAngle}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding AxisSnapAngle, StringFormat={}{0:0.#}°}" />
+
+                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                            <CheckBox Style="{StaticResource Switch}" Content="{l:Tr sticks.invertX}" IsChecked="{Binding InvertX}" Margin="0,0,24,0" />
+                            <CheckBox Style="{StaticResource Switch}" Content="{l:Tr sticks.invertY}" IsChecked="{Binding InvertY}" />
+                        </StackPanel>
+                    </Grid>
+                </Expander>
+
+                <Expander Style="{StaticResource Section}" Header="{l:Tr sticks.calibration}" IsExpanded="False" theme:Racing.Summary="{Binding CalibrationSummary}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="*" MinWidth="200" />
+                            <ColumnDefinition Width="54" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28" /><RowDefinition Height="28" /><RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.centerX}" />
+                        <c:SegmentSlider Grid.Column="1" Minimum="-0.2" Maximum="0.2" SmallChange="0.001" Value="{Binding CenterOffsetX}" />
+                        <TextBlock Grid.Column="2" Style="{StaticResource Value}" Text="{Binding CenterOffsetX, StringFormat={}{0:+0.000;-0.000;+0.000}}" />
+                        <TextBlock Grid.Row="1" Style="{StaticResource Label}" Text="{l:Tr sticks.centerY}" />
+                        <c:SegmentSlider Grid.Row="1" Grid.Column="1" Minimum="-0.2" Maximum="0.2" SmallChange="0.001" Value="{Binding CenterOffsetY}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding CenterOffsetY, StringFormat={}{0:+0.000;-0.000;+0.000}}" />
+                        <WrapPanel Grid.Row="2" Grid.Column="1" Margin="0,12,0,0">
+                            <Button Style="{StaticResource SkewButton}" Content="{l:Tr sticks.calibrate}" Command="{Binding CalibrateCommand}" />
+                            <Button Style="{StaticResource SkewButton}" Content="{l:Tr sticks.reset}" Command="{Binding ResetCommand}" />
+                        </WrapPanel>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
