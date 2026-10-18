@@ -103,17 +103,21 @@
                             <ColumnDefinition Width="54" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="28" /><RowDefinition Height="28" /><RowDefinition Height="36" />
+                            <RowDefinition Height="28" /><RowDefinition Height="28" /><RowDefinition Height="28" /><RowDefinition Height="36" />
                         </Grid.RowDefinitions>
                         <TextBlock Style="{StaticResource Label}" Text="{l:Tr sticks.sensitivity}" />
                         <c:SegmentSlider Grid.Column="1" Minimum="0.5" Maximum="2" SmallChange="0.01" Accent="{StaticResource Red}" Value="{Binding Sensitivity}" />
                         <TextBlock Grid.Column="2" Style="{StaticResource Value}" Text="{Binding Sensitivity, StringFormat={}{0:P0}}" />
 
-                        <TextBlock Grid.Row="1" Style="{StaticResource Label}" Text="{l:Tr sticks.snap}" ToolTip="{l:Tr sticks.snapTip}" />
-                        <c:SegmentSlider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="30" SmallChange="0.5" Accent="{StaticResource Red}" Value="{Binding AxisSnapAngle}" />
-                        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding AxisSnapAngle, StringFormat={}{0:0.#}°}" />
+                        <TextBlock Grid.Row="1" Style="{StaticResource Label}" Text="{l:Tr sticks.snapH}" ToolTip="{l:Tr sticks.snapHTip}" />
+                        <c:SegmentSlider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="30" SmallChange="0.5" Accent="{StaticResource Red}" Value="{Binding HorizontalSnapAngle}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding HorizontalSnapAngle, StringFormat={}{0:0.#}°}" />
 
-                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBlock Grid.Row="2" Style="{StaticResource Label}" Text="{l:Tr sticks.snapV}" ToolTip="{l:Tr sticks.snapVTip}" />
+                        <c:SegmentSlider Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="30" SmallChange="0.5" Accent="{StaticResource Red}" Value="{Binding VerticalSnapAngle}" />
+                        <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource Value}" Text="{Binding VerticalSnapAngle, StringFormat={}{0:0.#}°}" />
+
+                        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
                             <CheckBox Style="{StaticResource Switch}" Content="{l:Tr sticks.invertX}" IsChecked="{Binding InvertX}" Margin="0,0,24,0" />
                             <CheckBox Style="{StaticResource Switch}" Content="{l:Tr sticks.invertY}" IsChecked="{Binding InvertY}" />
                         </StackPanel>

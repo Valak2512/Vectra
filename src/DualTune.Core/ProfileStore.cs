@@ -129,17 +129,28 @@ public sealed class ProfileStore
         R2 = Normalize(p.R2),
     };
 
-    private static StickSettings Normalize(StickSettings s) => s with
+    private static StickSettings Normalize(StickSettings s)
     {
-        CenterOffsetX = Clamp(s.CenterOffsetX, -0.2f, 0.2f),
-        CenterOffsetY = Clamp(s.CenterOffsetY, -0.2f, 0.2f),
-        InnerDeadzone = Clamp(s.InnerDeadzone, 0f, 0.5f),
-        AxialDeadzone = Clamp(s.AxialDeadzone, 0f, 0.5f),
-        OuterDeadzone = Clamp(s.OuterDeadzone, 0f, 0.3f),
-        AxisSnapAngle = Clamp(s.AxisSnapAngle, 0f, 30f),
-        AntiDeadzone = Clamp(s.AntiDeadzone, 0f, 0.5f),
-        Sensitivity = Clamp(s.Sensitivity, 0.5f, 2f),
-    };
+        s = Migrate(s);
+        return s with
+        {
+            CenterOffsetX = Clamp(s.CenterOffsetX, -0.2f, 0.2f),
+            CenterOffsetY = Clamp(s.CenterOffsetY, -0.2f, 0.2f),
+            InnerDeadzone = Clamp(s.InnerDeadzone, 0f, 0.5f),
+            AxialDeadzone = Clamp(s.AxialDeadzone, 0f, 0.5f),
+            OuterDeadzone = Clamp(s.OuterDeadzone, 0f, 0.3f),
+            HorizontalSnapAngle = Clamp(s.HorizontalSnapAngle, 0f, 30f),
+            VerticalSnapAngle = Clamp(s.VerticalSnapAngle, 0f, 30f),
+            AntiDeadzone = Clamp(s.AntiDeadzone, 0f, 0.5f),
+            Sensitivity = Clamp(s.Sensitivity, 0.5f, 2f),
+        };
+    }
+
+    /// <summary>Ancien accrochage unique (avant la v1.1) : repris sur les deux axes s'ils ne sont pas déjà réglés.</summary>
+    private static StickSettings Migrate(StickSettings s) => s.LegacyAxisSnapAngle is not { } old ? s
+        : s.HorizontalSnapAngle == 0 && s.VerticalSnapAngle == 0
+            ? s with { HorizontalSnapAngle = old, VerticalSnapAngle = old, LegacyAxisSnapAngle = null }
+            : s with { LegacyAxisSnapAngle = null };
 
     private static TriggerSettings Normalize(TriggerSettings t) => t with
     {

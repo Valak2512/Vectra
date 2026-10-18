@@ -68,10 +68,10 @@ public sealed class StickVisualizer : FrameworkElement
         else dc.DrawEllipse(null, GatePen, c, r, r);
 
         // Cônes d'accrochage aux axes.
-        if (s.AxisSnapAngle > 0)
+        for (int k = 0; k < 4; k++)
         {
-            double snap = Math.Min(s.AxisSnapAngle, 44) * Math.PI / 180;
-            for (int k = 0; k < 4; k++) DrawWedge(dc, c, r, k * Math.PI / 2, snap);
+            float angle = k % 2 == 0 ? s.HorizontalSnapAngle : s.VerticalSnapAngle; // droite, haut, gauche, bas
+            if (angle > 0) DrawWedge(dc, c, r, k * Math.PI / 2, Math.Min(angle, 44) * Math.PI / 180);
         }
 
         // Seuil extérieur (au-delà, la sortie est à 100 %).

@@ -107,7 +107,8 @@ public sealed class ProfileStoreTests : IDisposable
         var p = Assert.Single(store.LoadAll(out var errors), x => x.Name == "A");
         Assert.Empty(errors);
         Assert.Equal(0.5f, p.LeftStick.InnerDeadzone);
-        Assert.Equal(30f, p.LeftStick.AxisSnapAngle);
+        Assert.Equal(30f, p.LeftStick.HorizontalSnapAngle); // ancien réglage unique : repris sur les deux axes
+        Assert.Equal(30f, p.LeftStick.VerticalSnapAngle);
         Assert.Equal(0f, p.LeftStick.OuterDeadzone);
         Assert.Equal(0f, p.LeftStick.AxialDeadzone);
         Assert.Equal(2f, p.LeftStick.Sensitivity);
@@ -166,5 +167,28 @@ public sealed class ProfileStoreTests : IDisposable
         var s = new AppSettings("Rocket League", HideController: false, OutputEnabled: true);
         store.SaveSettings(s);
         Assert.Equal(s, store.LoadSettings());
+    }
+
+    [Fact]
+    public void LoadAll_OldSingleSnap_CopiedToBothAxes_AndNotWrittenBack()
+    {
+        WriteProfileJson("Old.json", """{ "Name": "Old", "LeftStick": { "AxisSnapAngle": 12 } }""");
+        var store = new ProfileStore(_dir);
+        var p = Assert.Single(store.LoadAll(out _), x => x.Name == "Old");
+        Assert.Equal(12f, p.LeftStick.HorizontalSnapAngle);
+        Assert.Equal(12f, p.LeftStick.VerticalSnapAngle);
+        Assert.Equal(0f, p.RightStick.HorizontalSnapAngle);
+
+        store.Save(p);
+        Assert.DoesNotContain("AxisSnapAngle", File.ReadAllText(Path.Combine(_dir, "profiles", "Old.json")));
+    }
+
+    [Fact]
+    public void LoadAll_SeparateSnaps_Kept()
+    {
+        WriteProfileJson("New.json", """{ "Name": "New", "LeftStick": { "HorizontalSnapAngle": 4, "VerticalSnapAngle": 18 } }""");
+        var p = Assert.Single(new ProfileStore(_dir).LoadAll(out _), x => x.Name == "New");
+        Assert.Equal(4f, p.LeftStick.HorizontalSnapAngle);
+        Assert.Equal(18f, p.LeftStick.VerticalSnapAngle);
     }
 }

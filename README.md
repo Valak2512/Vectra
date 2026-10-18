@@ -15,7 +15,8 @@
 ## Features
 
 - **Sticks** — inner deadzone (round, square, cross, hybrid), outer deadzone and shape (circle / square),
-  anti-deadzone, sensitivity, axis snap (locks onto up/down/left/right when you are close), invert, center calibration.
+  anti-deadzone, sensitivity, axis snap with separate horizontal and vertical strength (locks onto up/down/left/right
+  when you are close), invert, center calibration.
   Live view of what goes in and what comes out.
 - **Curves** — editable response curve for each stick and trigger, with presets.
 - **Triggers** — deadzone, outer zone and anti-deadzone for L2 / R2.

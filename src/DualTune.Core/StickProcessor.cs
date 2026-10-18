@@ -17,7 +17,7 @@ public static class StickProcessor
             return StickState.Zero;
 
         // Accrochage aux axes (transition douce) : seule la direction change.
-        if (s.AxisSnapAngle > 0) theta = SnapToAxes(theta, s.AxisSnapAngle);
+        if (s.HorizontalSnapAngle > 0 || s.VerticalSnapAngle > 0) theta = SnapToAxes(theta, s.HorizontalSnapAngle, s.VerticalSnapAngle);
 
         // §5.3 Courbe, §5.4 Anti-deadzone, §5.5 Sensibilité
         m = s.Curve.Evaluate(m);
@@ -42,16 +42,21 @@ public static class StickProcessor
     }
 
     /// <summary>
-    /// Ramène sur l'axe le plus proche toute direction à moins de <paramref name="snapDegrees"/> de lui ; au-delà,
-    /// l'écart restant est étiré linéairement jusqu'à la diagonale (45°), qui ne bouge pas. Aucun saut de direction.
+    /// Ramène sur l'axe le plus proche toute direction à moins de son angle d'accrochage (horizontal pour
+    /// gauche/droite, vertical pour haut/bas) ; au-delà, l'écart restant est étiré linéairement jusqu'à la
+    /// diagonale (45°), qui ne bouge pas. Aucun saut de direction, même avec deux angles différents.
     /// </summary>
-    private static float SnapToAxes(float theta, float snapDegrees)
+    private static float SnapToAxes(float theta, float horizontalDegrees, float verticalDegrees)
     {
         const float quarter = MathF.PI / 2;
         const float half = MathF.PI / 4;
-        float snap = MathF.Min(snapDegrees, 44f) * MathF.PI / 180f;
 
-        float axis = MathF.Round(theta / quarter) * quarter;
+        float k = MathF.Round(theta / quarter);
+        float axis = k * quarter;
+        bool vertical = ((int)k & 1) != 0; // multiples impairs de 90° : haut / bas
+        float snap = MathF.Min(vertical ? verticalDegrees : horizontalDegrees, 44f) * MathF.PI / 180f;
+        if (snap <= 0) return theta;
+
         float d = theta - axis; // écart à l'axe le plus proche, dans [-45°, 45°]
         float abs = MathF.Abs(d);
         if (abs <= snap) return axis;

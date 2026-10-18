@@ -58,8 +58,9 @@ public class SticksPageViewModelTests
     public void ResponseSummary_Format()
     {
         var (_, left, _) = Make();
-        left.AxisSnapAngle = 12f;
-        Assert.Equal("100% · 12°", left.ResponseSummary);
+        left.HorizontalSnapAngle = 12f;
+        left.VerticalSnapAngle = 4.5f;
+        Assert.Equal("100% · H 12° · V 4.5°", left.ResponseSummary);
     }
 
     [Fact]

@@ -23,11 +23,13 @@ public class StickViewModelTests
     }
 
     [Fact]
-    public void AxisSnapAngle_WritesSetting()
+    public void SnapAngles_WriteSettingsSeparately()
     {
         var vm = Make(left: true);
-        vm.AxisSnapAngle = 12f;
-        Assert.Equal(12f, _profile.LeftStick.AxisSnapAngle);
+        vm.HorizontalSnapAngle = 12f;
+        vm.VerticalSnapAngle = 4f;
+        Assert.Equal(12f, _profile.LeftStick.HorizontalSnapAngle);
+        Assert.Equal(4f, _profile.LeftStick.VerticalSnapAngle);
     }
 
     [Fact]

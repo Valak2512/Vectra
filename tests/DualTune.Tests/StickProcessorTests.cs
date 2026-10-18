@@ -144,7 +144,7 @@ public class StickProcessorTests
     [InlineData(-82f, -90f)]
     public void AxisSnap_WithinAngle_SnapsToAxis(float input, float expectedAxis)
     {
-        var r = AtAngle(SnapBase with { AxisSnapAngle = 10f }, input);
+        var r = AtAngle(SnapBase with { HorizontalSnapAngle = 10f, VerticalSnapAngle = 10f }, input);
         float diff = MathF.Abs(AngleDeg(r) - expectedAxis);
         Assert.True(diff < 0.01f || MathF.Abs(diff - 360f) < 0.01f, $"angle {AngleDeg(r)}");
         Near(1f, Mag(r)); // la magnitude n'est pas touchée
@@ -154,13 +154,13 @@ public class StickProcessorTests
     public void AxisSnap_JustOutside_IsContinuous()
     {
         // 10,5° avec 10° d'accrochage → (0,5 × 45/35) ≈ 0,64° : pas de saut.
-        Assert.InRange(AngleDeg(AtAngle(SnapBase with { AxisSnapAngle = 10f }, 10.5f)), 0.5f, 0.8f);
+        Assert.InRange(AngleDeg(AtAngle(SnapBase with { HorizontalSnapAngle = 10f, VerticalSnapAngle = 10f }, 10.5f)), 0.5f, 0.8f);
     }
 
     [Fact]
     public void AxisSnap_Diagonal_IsUnchanged()
     {
-        Assert.InRange(AngleDeg(AtAngle(SnapBase with { AxisSnapAngle = 20f }, 45f)), 44.99f, 45.01f);
+        Assert.InRange(AngleDeg(AtAngle(SnapBase with { HorizontalSnapAngle = 20f, VerticalSnapAngle = 20f }, 45f)), 44.99f, 45.01f);
     }
 
     [Fact]
@@ -172,7 +172,38 @@ public class StickProcessorTests
     [Fact]
     public void AxisSnap_ZeroInput_StaysZero()
     {
-        Assert.Equal(StickState.Zero, P(SnapBase with { AxisSnapAngle = 30f }, 0f, 0f));
+        Assert.Equal(StickState.Zero, P(SnapBase with { HorizontalSnapAngle = 30f, VerticalSnapAngle = 30f }, 0f, 0f));
+    }
+
+    [Fact]
+    public void AxisSnap_HorizontalOnly_LeavesVerticalAlone()
+    {
+        var s = SnapBase with { HorizontalSnapAngle = 10f };
+        Assert.InRange(AngleDeg(AtAngle(s, 8f)), -0.01f, 0.01f);   // près de droite : accroché
+        Assert.InRange(AngleDeg(AtAngle(s, 98f)), 97.99f, 98.01f); // près du haut : libre
+    }
+
+    [Fact]
+    public void AxisSnap_VerticalOnly_LeavesHorizontalAlone()
+    {
+        var s = SnapBase with { VerticalSnapAngle = 20f };
+        Assert.InRange(AngleDeg(AtAngle(s, 75f)), 89.99f, 90.01f);
+        Assert.InRange(AngleDeg(AtAngle(s, -110f)), -90.01f, -89.99f);
+        Assert.InRange(AngleDeg(AtAngle(s, 5f)), 4.99f, 5.01f);
+    }
+
+    [Theory]
+    [InlineData(44.9f)]
+    [InlineData(45f)]
+    [InlineData(45.1f)]
+    [InlineData(134.9f)]
+    [InlineData(135.1f)]
+    public void AxisSnap_DifferentAngles_ContinuousAtDiagonal(float input)
+    {
+        // Diagonale fixe et pas de saut en la traversant, même avec des réglages très différents.
+        var s = SnapBase with { HorizontalSnapAngle = 5f, VerticalSnapAngle = 30f };
+        float diagonal = MathF.Round(input / 45f) * 45f;
+        Assert.InRange(AngleDeg(AtAngle(s, input)), diagonal - 0.5f, diagonal + 0.5f);
     }
 
     [Fact]

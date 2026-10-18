@@ -32,7 +32,8 @@ public sealed class StickViewModel : ViewModelBase
     public float InnerDeadzone { get => Settings.InnerDeadzone; set => Edit(s => s with { InnerDeadzone = value }); }
     public float AxialDeadzone { get => Settings.AxialDeadzone; set => Edit(s => s with { AxialDeadzone = value }); }
     public float OuterDeadzone { get => Settings.OuterDeadzone; set => Edit(s => s with { OuterDeadzone = value }); }
-    public float AxisSnapAngle { get => Settings.AxisSnapAngle; set => Edit(s => s with { AxisSnapAngle = value }); }
+    public float HorizontalSnapAngle { get => Settings.HorizontalSnapAngle; set => Edit(s => s with { HorizontalSnapAngle = value }); }
+    public float VerticalSnapAngle { get => Settings.VerticalSnapAngle; set => Edit(s => s with { VerticalSnapAngle = value }); }
     public float AntiDeadzone { get => Settings.AntiDeadzone; set => Edit(s => s with { AntiDeadzone = value }); }
     public float Sensitivity { get => Settings.Sensitivity; set => Edit(s => s with { Sensitivity = value }); }
     public float CenterOffsetX { get => Settings.CenterOffsetX; set => Edit(s => s with { CenterOffsetX = value }); }
@@ -52,7 +53,8 @@ public sealed class StickViewModel : ViewModelBase
 
     // Résumés affichés dans les bandeaux de section.
     public string DeadzoneSummary => $"{InnerLabel(InnerShape)} · {Pct(InnerDeadzone)} · {Loc.T(OuterShape == OuterShape.Square ? "shape.squareOuter" : "shape.circle")}";
-    public string ResponseSummary => $"{Pct(Sensitivity)} · {AxisSnapAngle.ToString("0.#", Inv)}°";
+    public string ResponseSummary =>
+        $"{Pct(Sensitivity)} · H {HorizontalSnapAngle.ToString("0.#", Inv)}° · V {VerticalSnapAngle.ToString("0.#", Inv)}°";
     public string CalibrationSummary => $"X {Signed(CenterOffsetX)} · Y {Signed(CenterOffsetY)}";
 
     public string InputReadout => $"{Raw.X.ToString("0.00", Inv)} / {Raw.Y.ToString("0.00", Inv)}";

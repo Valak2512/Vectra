@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace DualTune.Core;
 
 public enum InnerShape { Round, Square, Cross, Hybrid }
@@ -14,8 +16,13 @@ public sealed record StickSettings
     public float AxialDeadzone { get; init; } = 0.05f;
     public float OuterDeadzone { get; init; } = 0.02f;
     public OuterShape OuterShape { get; init; } = OuterShape.Circle;
-    /// <summary>Accrochage aux axes haut/bas/gauche/droite, en degrés (0 = désactivé, max 30).</summary>
-    public float AxisSnapAngle { get; init; }
+    /// <summary>Accrochage à l'axe horizontal (gauche / droite), en degrés (0 = désactivé, max 30).</summary>
+    public float HorizontalSnapAngle { get; init; }
+    /// <summary>Accrochage à l'axe vertical (haut / bas), en degrés (0 = désactivé, max 30).</summary>
+    public float VerticalSnapAngle { get; init; }
+    /// <summary>Ancien réglage unique (profils d'avant la v1.1) : lu, repris sur les deux axes, jamais réécrit.</summary>
+    [JsonPropertyName("AxisSnapAngle"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public float? LegacyAxisSnapAngle { get; init; }
     public ResponseCurve Curve { get; init; } = ResponseCurve.Linear;
     public float AntiDeadzone { get; init; }
     public float Sensitivity { get; init; } = 1f;
